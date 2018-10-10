@@ -1,59 +1,26 @@
 #include <ft_nm_otool.h>
 
-// #define N_UNDF 0
-// #define N_ABS 2
-// #define N_TEXT 4
-// #define N_DATA 6
-// #define N_BSS 8
-// #define N_FN 15
-// #define N_PBUD 12
-// #define N_SECT 14
-#define CHARS "1U234567891234tT"
-
-char	get_char_type(char c)
+char	get_char_type(char c, long long val)
 {
-	// c & N_TYPE
-	/*
-	case N_UNDF:
-		c = 'u';
-		if(symbols[i].nl.n_value != 0)
-		    c = 'c';
-			break;
-    case N_PBUD:
-		c = 'u';
-		break;
-    case N_ABS:
-		c = 'a';
-		break;
-    case N_SECT:
-		if(symbols[i].nl.n_sect == process_flags->text_nsect)
-		    c = 't';
-		else if(symbols[i].nl.n_sect == process_flags->data_nsect)
-		    c = 'd';
-		else if(symbols[i].nl.n_sect == process_flags->bss_nsect)
-		    c = 'b';
-		else
-		    c = 's';
-		break;
-    case N_INDR:
-		c = 'i';
-		break;
-    default:
-		c = '?';
-		break;
-	    }
-	*/
 	char ret;
 	if ((c & N_TYPE) == N_UNDF)
+	{
 		ret = 'u';
+		if (val != 0)
+			ret = 'c';
+	}
+	else if ((c & N_TYPE) == N_PBUD)
+		ret = 'u';
+	else if ((c & N_TYPE) == N_ABS)
+		ret = 'a';
 	else if ((c & N_TYPE) == N_SECT)
 		ret = 't';
-	
-
-
-
+	else if ((c & N_TYPE) == N_INDR)
+		ret = 'i';
+	else
+		ret = '?';
 	// (not)external
-	if (c & 0x01)
+	if (c & N_EXT)
 		ret = ft_toupper(ret);
 	return (ret);
 }
@@ -69,8 +36,11 @@ void	print_output(int nsyms, int symoff, int stroff, char *ptr)
 	i = 0;
 	while (i < nsyms)
 	{
-		char c = get_char_type(array[i].n_type);
-		ft_printf("%016llx %c %s\n", array[i].n_value, c, stringtable + array[i].n_un.n_strx);
+		char c = get_char_type(array[i].n_type, array[i].n_value);
+		if (array[i].n_value)
+			ft_printf("%016llx %c %s\n", array[i].n_value, c, stringtable + array[i].n_un.n_strx);
+		else
+			ft_printf("                 %c %s\n", c, stringtable + array[i].n_un.n_strx);
 		i++;
 	}
 }
