@@ -1,18 +1,60 @@
 #include <ft_nm_otool.h>
 
+// #define N_UNDF 0
+// #define N_ABS 2
+// #define N_TEXT 4
+// #define N_DATA 6
+// #define N_BSS 8
+// #define N_FN 15
+// #define N_PBUD 12
+// #define N_SECT 14
 #define CHARS "1U234567891234tT"
 
 char	get_char_type(char c)
 {
+	// c & N_TYPE
+	/*
+	case N_UNDF:
+		c = 'u';
+		if(symbols[i].nl.n_value != 0)
+		    c = 'c';
+			break;
+    case N_PBUD:
+		c = 'u';
+		break;
+    case N_ABS:
+		c = 'a';
+		break;
+    case N_SECT:
+		if(symbols[i].nl.n_sect == process_flags->text_nsect)
+		    c = 't';
+		else if(symbols[i].nl.n_sect == process_flags->data_nsect)
+		    c = 'd';
+		else if(symbols[i].nl.n_sect == process_flags->bss_nsect)
+		    c = 'b';
+		else
+		    c = 's';
+		break;
+    case N_INDR:
+		c = 'i';
+		break;
+    default:
+		c = '?';
+		break;
+	    }
+	*/
 	char ret;
-	if ((c & 0x0e) == 14)
-		ret = 'T';
-	else if ((c & 0x0e) == 0)
-		ret = 'U';
-	// external
-	if (!(c & 0x01))
-		ret = ft_tolower(ret);
+	if ((c & N_TYPE) == N_UNDF)
+		ret = 'u';
+	else if ((c & N_TYPE) == N_SECT)
+		ret = 't';
+	
 
+
+
+	// (not)external
+	if (c & 0x01)
+		ret = ft_toupper(ret);
 	return (ret);
 }
 
